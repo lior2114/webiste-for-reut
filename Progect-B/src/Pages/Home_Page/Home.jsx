@@ -3,13 +3,11 @@ import { Box, Container, Typography, Button, Paper, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Flight, Person, Star } from '@mui/icons-material';
 import { useUi } from '../../Contexts/UiContext';
-import { UseUser } from '../../Contexts/UserContexts';
 import styles from './Home.module.css';
 
 export function Home() {
   const navigate = useNavigate();
   const { language } = useUi();
-  const { isAuthenticated } = UseUser();
   const t = (he, en) => (language === 'he' ? he : en);
 
   return (
@@ -26,39 +24,27 @@ export function Home() {
           </Typography>
           
           <Typography variant="body1" className={styles.heroBody}>
-            {t('כאן תוכלו לראות חופשות, להירשם למערכת, ולהתחבר לחשבון שלכם', 'Here you can view vacations, register, and log in to your account')}
+            {t('כאן תוכלו לראות חופשות ולהזמין את החופשה המושלמת', 'Here you can view vacations and book the perfect vacation')}
           </Typography>
           
           <Box className={styles.ctaRow}>
-            {!isAuthenticated && (
-              <>
-                <Button 
-                  variant="contained" 
-                  size="large"
-                  onClick={() => navigate('/register')}
-                  className={styles.ctaBtn}
-                >
-                  {t('הרשמה למערכת', 'Register')}
-                </Button>
-                
-                <Button 
-                  variant="outlined" 
-                  size="large" 
-                  onClick={() => navigate('/login')}
-                  className={styles.ctaBtn}
-                >
-                  {t('התחברות', 'Login')}
-                </Button>
-              </>
-            )}
-            
             <Button 
-              variant="outlined" 
+              variant="contained" 
+              color="secondary"
               size="large" 
               onClick={() => navigate('/vacations')}
               className={styles.ctaBtn}
             >
               {t('צפה בחופשות', 'Browse Vacations')}
+            </Button>
+            
+            <Button 
+              variant="outlined" 
+              size="large" 
+              onClick={() => navigate('/vacations/add')}
+              className={styles.ctaBtn}
+            >
+              {t('הוסף חופשה', 'Add Vacation')}
             </Button>
           </Box>
         </Paper>

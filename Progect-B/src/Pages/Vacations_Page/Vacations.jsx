@@ -22,14 +22,12 @@ import {
 import { Favorite, FavoriteBorder, Edit, Delete, Add, CalendarToday } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import styles from './Vacations.module.css';
-import { UseUser } from '../../Contexts/UserContexts';
 import { useUi } from '../../Contexts/UiContext';
-import { getVacations, getLikes, likeVacation, unlikeVacation, deleteVacation } from '../../api/api';
+import { getVacations, likeVacation, unlikeVacation, deleteVacation } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 
 export function Vacations() {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = UseUser();
   const { language, currency } = useUi();
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
@@ -42,58 +40,35 @@ export function Vacations() {
   const [confirmDeleteId, setConfirmDeleteId] = React.useState(null);
   const [filenameCounts, setFilenameCounts] = React.useState({});
 
-  const isAdmin = Boolean(user && Number(user.role_id) === 1);
-
   const loadData = React.useCallback(async () => {
     setLoading(true);
     setError("");
     try {
-      const [vacationsResp, likesResp] = await Promise.all([
-        getVacations(),
-        getLikes(),
-      ]);
+      const vacationsResp = await getVacations();
 
       const sorted = Array.isArray(vacationsResp)
-        ? [...vacationsResp].sort((a, b) => new Date(a.vacation_start) - new Date(b.vacation_start))
+        ? [...vacationsResp].sort((a, b) => new Date(a.vacation_start_date) - new Date(b.vacation_start_date))
         : [];
       setVacations(sorted);
-      // compute filename counts (non-empty, non-URL)
-      const counts = {};
-      for (const v of sorted) {
-        const name = (v?.vacation_file_name || '').trim();
-        if (name && !/^https?:\/\//i.test(name)) {
-          counts[name] = (counts[name] || 0) + 1;
-        }
-      }
-      setFilenameCounts(counts);
-
+      
+      // Initialize likes count from vacation data
       const likesCountMap = {};
-      const likedSet = new Set();
-      if (Array.isArray(likesResp)) {
-        for (const row of likesResp) {
-          const rowUserId = Number(row.user_id);
-          const rowVacationId = Number(row.vacation_id);
-          likesCountMap[rowVacationId] = (likesCountMap[rowVacationId] || 0) + 1;
-          if (isAuthenticated && user?.user_id && Number(user.user_id) === rowUserId) {
-            likedSet.add(rowVacationId);
-          }
-        }
+      for (const vacation of sorted) {
+        likesCountMap[vacation.id] = vacation.vacation_followers_count || 0;
       }
       setLikesByVacationId(likesCountMap);
-      setLikedByUser(likedSet);
     } catch (e) {
       setError(e.message || 'Failed to load vacations');
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated, user]);
+  }, []);
 
   React.useEffect(() => {
     loadData();
   }, [loadData]);
 
   const handleLikeToggle = async (vacationId) => {
-    if (!isAuthenticated || isAdmin) return;
     const currentlyLiked = likedByUser.has(vacationId);
     setLikedByUser((prev) => {
       const copy = new Set(prev);
@@ -107,9 +82,9 @@ export function Vacations() {
 
     try {
       if (currentlyLiked) {
-        await unlikeVacation({ user_id: user.user_id, vacation_id: vacationId });
+        await unlikeVacation({ user_id: 1, vacation_id: vacationId });
       } else {
-        await likeVacation({ user_id: user.user_id, vacation_id: vacationId });
+        await likeVacation({ user_id: 1, vacation_id: vacationId });
       }
     } catch (e) {
       setLikedByUser((prev) => {
@@ -128,8 +103,8 @@ export function Vacations() {
   const handleDelete = async () => {
     if (!confirmDeleteId) return;
     try {
-      await deleteVacation(confirmDeleteId, user?.user_id);
-      setVacations((prev) => prev.filter((v) => Number(v.vacation_id) !== Number(confirmDeleteId)));
+      await deleteVacation(confirmDeleteId);
+      setVacations((prev) => prev.filter((v) => Number(v.id) !== Number(confirmDeleteId)));
       setLikesByVacationId((prev) => {
         const copy = { ...prev };
         delete copy[confirmDeleteId];
@@ -260,11 +235,9 @@ export function Vacations() {
     <Container maxWidth="lg">
       <Box className={styles.headerBar}>
         <Typography variant="h4" component="h1">{t('חופשות', 'Vacations')}</Typography>
-        {isAdmin && (
-          <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/vacations/add')}>
-            {t('הוסף חופשה', 'Add Vacation')}
-          </Button>
-        )}
+        <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/vacations/add')}>
+          {t('הוסף חופשה', 'Add Vacation')}
+        </Button>
       </Box>
 
       {error && (
@@ -282,13 +255,13 @@ export function Vacations() {
       ) : (
         <Box role="list" className={styles.grid}>
           {vacations.map((vacation) => {
-            const vacationId = Number(vacation.vacation_id);
+            const vacationId = Number(vacation.id);
             const likesCount = likesByVacationId[vacationId] || 0;
             const isLiked = likedByUser.has(vacationId);
-            const canLike = isAuthenticated && !isAdmin;
+            const canLike = true; // Allow everyone to like
 
-            const start = vacation.vacation_start;
-            const end = vacation.vacation_ends;
+            const start = vacation.vacation_start_date;
+            const end = vacation.vacation_end_date;
 
             return (
               <Box key={vacationId} role="listitem" className={styles.listItem}>
@@ -297,7 +270,7 @@ export function Vacations() {
                     <CardMedia
                       component="img"
                       height="180"
-                      image={getImageSrc(vacation)}
+                      image={vacation.vacation_image || placeholderImg}
                       alt={vacation.vacation_description}
                       onError={(e)=>{ e.currentTarget.src = placeholderImg; }}
                       className={styles.mediaImg}
@@ -309,20 +282,17 @@ export function Vacations() {
                       aria-label={t('לייק', 'Like')}
                       size="small"
                       onClick={() => handleLikeToggle(vacationId)}
-                      disabled={isAdmin || !isAuthenticated}
                       className={`${styles.likeBtn} ${isDark ? styles.likeBtnDark : styles.likeBtnLight}`}
                     >
                       {isLiked ? t('❤ Like', '❤ Like') : t('♡ Like', '♡ Like')} {likesCount ? likesCount : ''}
                     </Button>
-                    {isAdmin && (
-                      <Stack direction="row" spacing={1} className={styles.cardTopActions}>
-                        <Button aria-label={t('עריכה', 'Edit')} size="small" variant="outlined" color="inherit" onClick={() => navigate(`/vacations/edit/${vacationId}`)} startIcon={<Edit />} sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}>Edit</Button>
-                        <Button aria-label={t('מחיקה', 'Delete')} size="small" variant="outlined" color="inherit" onClick={() => setConfirmDeleteId(vacationId)} startIcon={<Delete />} sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}>Delete</Button>
-                      </Stack>
-                    )}
+                    <Stack direction="row" spacing={1} className={styles.cardTopActions}>
+                      <Button aria-label={t('עריכה', 'Edit')} size="small" variant="outlined" color="inherit" onClick={() => navigate(`/vacations/edit/${vacationId}`)} startIcon={<Edit />} sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}>Edit</Button>
+                      <Button aria-label={t('מחיקה', 'Delete')} size="small" variant="outlined" color="inherit" onClick={() => setConfirmDeleteId(vacationId)} startIcon={<Delete />} sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}>Delete</Button>
+                    </Stack>
                     {/* title overlay */}
                     <Typography variant="h5" className={styles.titleOverlay}>
-                      {vacation.country_name}
+                      {vacation.vacation_destination}
                     </Typography>
                   </Box>
 
@@ -343,30 +313,26 @@ export function Vacations() {
                       sx={{ fontWeight: 'bold' }}
                       onClick={() => navigate('/no-money')}
                     >
-                      {(vacation.vacation_currency||'ILS') === 'ILS' ? '₪' : (vacation.vacation_currency||'ILS') === 'EUR' ? '€' : '$'}
-                      {Number(vacation.vacation_price).toLocaleString(language === 'he' ? 'he-IL' : 'en-US')}
+                      ${Number(vacation.vacation_price).toLocaleString(language === 'he' ? 'he-IL' : 'en-US')}
                     </Button>
                   </CardContent>
 
-                  {!isAdmin && (
-                    <CardActions className={styles.actionsRow}>
-                      <Tooltip title={canLike ? (isLiked ? t('בטל לייק', 'Unlike') : t('לייק', 'Like')) : t('יש להתחבר כדי ללייק', 'Login to like')}>
-                        <span>
-                          <IconButton
-                            color={isLiked ? 'error' : 'default'}
-                            onClick={() => handleLikeToggle(vacationId)}
-                            disabled={!canLike}
-                            aria-label="like"
-                          >
-                            {isLiked ? <Favorite /> : <FavoriteBorder />}
-                          </IconButton>
-                        </span>
-                      </Tooltip>
-                      <Typography variant="caption" sx={{ ml: 1, color: 'text.primary', fontWeight: 600 }}>
-                        {likesCount} {t('לייקים', 'likes')}
-                      </Typography>
-                    </CardActions>
-                  )}
+                  <CardActions className={styles.actionsRow}>
+                    <Tooltip title={isLiked ? t('בטל לייק', 'Unlike') : t('לייק', 'Like')}>
+                      <span>
+                        <IconButton
+                          color={isLiked ? 'error' : 'default'}
+                          onClick={() => handleLikeToggle(vacationId)}
+                          aria-label="like"
+                        >
+                          {isLiked ? <Favorite /> : <FavoriteBorder />}
+                        </IconButton>
+                      </span>
+                    </Tooltip>
+                    <Typography variant="caption" sx={{ ml: 1, color: 'text.primary', fontWeight: 600 }}>
+                      {likesCount} {t('לייקים', 'likes')}
+                    </Typography>
+                  </CardActions>
                 </Card>
               </Box>
             );
