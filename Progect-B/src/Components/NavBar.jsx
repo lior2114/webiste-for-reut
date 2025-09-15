@@ -96,16 +96,6 @@ export function NavBar() {
 
         </Box>
 
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1, ml: 2 }}>
-          <Button
-            color="inherit"
-            startIcon={<FlightIcon />}
-            onClick={() => handleNavigation('/vacations/add')}
-            sx={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.2)' } }}
-          >
-            {language === 'he' ? 'הוסף חופשה' : 'Add Vacation'}
-          </Button>
-        </Box>
 
         {/* Mobile Menu Button */}
         <IconButton size="large" edge="end" color="inherit" aria-label="menu" onClick={handleMobileMenuOpen} sx={{ display: { xs: 'flex', md: 'none' } }}>
@@ -123,12 +113,6 @@ export function NavBar() {
             </Box>
           </MenuItem>
         ))}
-        <MenuItem onClick={() => handleNavigation('/vacations/add')}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <FlightIcon />
-            {language === 'he' ? 'הוסף חופשה' : 'Add Vacation'}
-          </Box>
-        </MenuItem>
       </Menu>
     </AppBar>
   );

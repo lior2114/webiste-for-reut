@@ -15,7 +15,7 @@ export const useUi = () => {
 
 export const UiProvider = ({ children }) => {
     const [language, setLanguage] = useState(() => localStorage.getItem('ui_language') || 'he'); // 'he' | 'en'
-    const [mode, setMode] = useState(() => localStorage.getItem('ui_mode') || 'light'); // 'light' | 'dark'
+    const [mode, setMode] = useState(() => localStorage.getItem('ui_mode') || 'dark'); // 'light' | 'dark'
     const [currency, setCurrency] = useState(() => localStorage.getItem('ui_currency') || 'ILS'); // 'ILS' | 'USD' | 'EUR'
 
     const direction = language === 'he' ? 'rtl' : 'ltr';

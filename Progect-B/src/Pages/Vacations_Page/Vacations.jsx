@@ -11,15 +11,10 @@ import {
   Button,
   Paper,
   Tooltip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Alert,
   CircularProgress,
-  Stack,
 } from '@mui/material';
-import { Favorite, FavoriteBorder, Edit, Delete, Add, CalendarToday } from '@mui/icons-material';
+import { Favorite, FavoriteBorder, CalendarToday } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import styles from './Vacations.module.css';
 import { useUi } from '../../Contexts/UiContext';
@@ -235,9 +230,6 @@ export function Vacations() {
     <Container maxWidth="lg">
       <Box className={styles.headerBar}>
         <Typography variant="h4" component="h1">{t('חופשות', 'Vacations')}</Typography>
-        <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/vacations/add')}>
-          {t('הוסף חופשה', 'Add Vacation')}
-        </Button>
       </Box>
 
       {error && (
@@ -286,10 +278,6 @@ export function Vacations() {
                     >
                       {isLiked ? t('❤ Like', '❤ Like') : t('♡ Like', '♡ Like')} {likesCount ? likesCount : ''}
                     </Button>
-                    <Stack direction="row" spacing={1} className={styles.cardTopActions}>
-                      <Button aria-label={t('עריכה', 'Edit')} size="small" variant="outlined" color="inherit" onClick={() => navigate(`/vacations/edit/${vacationId}`)} startIcon={<Edit />} sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}>Edit</Button>
-                      <Button aria-label={t('מחיקה', 'Delete')} size="small" variant="outlined" color="inherit" onClick={() => setConfirmDeleteId(vacationId)} startIcon={<Delete />} sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}>Delete</Button>
-                    </Stack>
                     {/* title overlay */}
                     <Typography variant="h5" className={styles.titleOverlay}>
                       {vacation.vacation_destination}
@@ -340,16 +328,6 @@ export function Vacations() {
         </Box>
       )}
 
-      <Dialog open={Boolean(confirmDeleteId)} onClose={() => setConfirmDeleteId(null)}>
-        <DialogTitle>{t('אישור מחיקה', 'Confirm Delete')}</DialogTitle>
-        <DialogContent>
-          {t('האם אתה בטוח שברצונך למחוק את החופשה?', 'Are you sure you want to delete this vacation?')}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setConfirmDeleteId(null)}>{t('בטל', 'Cancel')}</Button>
-          <Button variant="contained" color="error" onClick={handleDelete}>{t('מחק', 'Delete')}</Button>
-        </DialogActions>
-      </Dialog>
     </Container>
   );
 }

@@ -38,14 +38,6 @@ export function Home() {
               {t('צפה בחופשות', 'Browse Vacations')}
             </Button>
             
-            <Button 
-              variant="outlined" 
-              size="large" 
-              onClick={() => navigate('/vacations/add')}
-              className={styles.ctaBtn}
-            >
-              {t('הוסף חופשה', 'Add Vacation')}
-            </Button>
           </Box>
         </Paper>
 
