@@ -1,0 +1,92 @@
+/* NavBar polish */
+.MuiAppBar-root {
+  background: linear-gradient(135deg, rgba(124, 77, 255, 0.25), rgba(0, 229, 255, 0.25)) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+/* Toolbar button/icon colors per theme */
+[data-theme='dark'] .MuiToolbar-root .MuiButton-root[color="inherit"] {
+  color: #e8eaf6 !important;
+}
+[data-theme='light'] .MuiToolbar-root .MuiButton-root[color="inherit"] {
+  color: #1b1e24 !important;
+}
+
+[data-theme='dark'] .MuiToolbar-root .MuiIconButton-root[color="inherit"],
+[data-theme='dark'] .MuiToolbar-root .MuiIconButton-root {
+  color: #e8eaf6 !important;
+}
+[data-theme='light'] .MuiToolbar-root .MuiIconButton-root[color="inherit"],
+[data-theme='light'] .MuiToolbar-root .MuiIconButton-root {
+  color: #1b1e24 !important;
+}
+[data-theme='dark'] .MuiToolbar-root .MuiButton-root[color="inherit"][aria-selected="true"],
+[data-theme='dark'] .MuiToolbar-root .MuiButton-root[color="inherit"]:hover,
+[data-theme='dark'] .MuiToolbar-root .MuiIconButton-root:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+[data-theme='light'] .MuiToolbar-root .MuiButton-root[color="inherit"][aria-selected="true"],
+[data-theme='light'] .MuiToolbar-root .MuiButton-root[color="inherit"]:hover,
+[data-theme='light'] .MuiToolbar-root .MuiIconButton-root:hover {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* NavBar RTL/LTR enforcement */
+[dir='ltr'] .MuiAppBar-root .MuiToolbar-root { flex-direction: row !important; justify-content: flex-start !important; }
+[dir='rtl'] .MuiAppBar-root .MuiToolbar-root { flex-direction: row-reverse !important; justify-content: flex-start !important; }
+[dir='rtl'] header.MuiPaper-root.MuiAppBar-root .MuiToolbar-root { justify-content: flex-end !important; }
+[dir='ltr'] header.MuiPaper-root.MuiAppBar-root .MuiToolbar-root { justify-content: flex-start !important; }
+[dir='rtl'] .MuiAppBar-root .MuiToolbar-root .MuiTypography-root { text-align: right !important; }
+[dir='ltr'] .MuiAppBar-root .MuiToolbar-root .MuiTypography-root { text-align: left !important; }
+[dir='ltr'] .MuiAppBar-root .MuiToolbar-root .MuiTypography-root { flex: 0 0 auto !important; margin-right: 12px; }
+[dir='rtl'] .MuiAppBar-root .MuiToolbar-root .MuiTypography-root { flex: 0 0 auto !important; margin-left: 12px; }
+[dir='rtl'] .MuiAppBar-root .MuiToolbar-root > .MuiTypography-root:first-child { flex: 0 0 auto !important; }
+[dir='ltr'] .MuiAppBar-root .MuiToolbar-root > .MuiTypography-root:first-child { flex: 0 0 auto !important; }
+
+/* Ensure toolbar children spacing respects direction */
+[dir='rtl'] .MuiAppBar-root .MuiToolbar-root > .MuiBox-root { margin-left: 12px !important; margin-right: 0 !important; }
+[dir='ltr'] .MuiAppBar-root .MuiToolbar-root > .MuiBox-root { margin-right: 12px !important; margin-left: 0 !important; }
+[dir='rtl'] .MuiAppBar-root .MuiToolbar-root > .MuiIconButton-root { margin-left: 8px !important; margin-right: 0 !important; }
+[dir='ltr'] .MuiAppBar-root .MuiToolbar-root > .MuiIconButton-root { margin-right: 8px !important; margin-left: 0 !important; }
+
+/* Ensure toolbar consumes full width so justify-content applies clearly */
+.MuiAppBar-root .MuiToolbar-root { width: 100% !important; }
+
+/* Nav item icon spacing (RTL/LTR aware) */
+[dir='ltr'] .MuiButton-startIcon { margin-right: 8px !important; margin-left: 0 !important; }
+[dir='rtl'] .MuiButton-startIcon { margin-left: 8px !important; margin-right: 0 !important; }
+[dir='ltr'] .MuiButton-endIcon { margin-left: 8px !important; margin-right: 0 !important; }
+[dir='rtl'] .MuiButton-endIcon { margin-right: 8px !important; margin-left: 0 !important; }
+.MuiButton-startIcon, .MuiButton-endIcon { display: inline-flex; align-items: center; }
+
+/* Headings hierarchy */
+h1 { font-size: 2rem; }
+h2 { font-size: 1.6rem; }
+h3 { font-size: 1.3rem; }
+
+/* Admin panel specific niceties without touching JSX */
+[href="/admin"] {
+  font-weight: 700 !important;
+}
+
+/* Paper sections spacing */
+.MuiPaper-root .MuiList-root { padding-top: 0 !important; }
+.MuiPaper-root .MuiListItem-root { padding-left: 12px; padding-right: 12px; }
+
+/* Buttons inside list secondary actions */
+.MuiListItemSecondaryAction-root .MuiButton-root {
+  margin-left: 6px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .MuiContainer-root { padding-left: 12px !important; padding-right: 12px !important; }
+  .MuiPaper-root { border-radius: 14px !important; }
+}
+
+@media (max-width: 600px) {
+  .MuiToolbar-root { padding-left: 8px !important; padding-right: 8px !important; }
+  .MuiButton-root { font-size: 0.85rem !important; }
+}
+
+

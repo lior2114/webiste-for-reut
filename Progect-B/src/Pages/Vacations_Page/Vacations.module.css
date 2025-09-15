@@ -1,0 +1,28 @@
+.headerBar{ margin-top:16px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; }
+.grid{ display:grid; grid-template-columns:1fr; gap:24px; align-items:stretch; }
+@media (min-width:600px){ .grid{ grid-template-columns:repeat(2,1fr);} }
+@media (min-width:900px){ .grid{ grid-template-columns:repeat(3,1fr);} }
+
+.listItem{ display:flex; }
+.card{ display:flex; flex-direction:column; width:100%; }
+.mediaWrap{ position:relative; }
+.mediaImg{ object-fit:cover; width:100%; }
+.topGradient{ position:absolute; inset:0; }
+.topGradientDark{ background:linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%);} 
+.topGradientLight{ background:linear-gradient(180deg, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.65) 100%);} 
+
+.likeBtn{ position:absolute; top:8px; left:8px; text-transform:none; padding:4px 10px; font-weight:800; letter-spacing:0.2px; font-size:0.9rem; color:#ffffff; text-shadow:0 1px 2px rgba(0,0,0,0.6); border:1.2px solid; box-shadow:0 8px 18px rgba(0,0,0,0.35); backdrop-filter:saturate(140%) blur(2px); }
+.likeBtnDark{ background:linear-gradient(135deg,#0ea5e9,#22d3ee); border-color:rgba(255,255,255,0.9);} 
+.likeBtnLight{ background:linear-gradient(135deg,#0b5ed7,#0077b6); border-color:rgba(0,0,0,0.55);} 
+
+.cardTopActions{ position:absolute; top:8px; right:8px; }
+.titleOverlay{ position:absolute; bottom:12px; left:16px; color:#fff; font-weight:700; text-shadow:0 1px 3px rgba(0,0,0,0.7); }
+
+.dateBar{ padding:8px 16px; display:flex; align-items:center; gap:8px; color:#ffffff; text-shadow:0 1px 2px rgba(0,0,0,0.45); box-shadow: inset 0 -1px 0 rgba(250,241,241,0.08), 0 4px 10px rgba(0,0,0,0.25); }
+.dateBarDark{ background:linear-gradient(135deg,#0f172a,#1f2937);} 
+.dateBarLight{ background:linear-gradient(135deg, rgb(249,251,255), rgb(118,42,248));}
+
+.cardContent{ flex-grow:1; }
+.descClamp{ margin-bottom:16px; display:-webkit-box; -webkit-line-clamp:5; line-clamp:5; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; word-break:break-word; hyphens:auto; }
+.actionsRow{ justify-content:flex-end; padding-top:0; padding-bottom:16px; padding-left:16px; padding-right:16px; }
+

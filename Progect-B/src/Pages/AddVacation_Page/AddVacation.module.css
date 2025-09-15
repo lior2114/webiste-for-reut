@@ -1,0 +1,12 @@
+.paper{ padding:32px; margin-top:16px; }
+.countryList{ max-height:300px; overflow-y:auto; border:1px solid rgba(0,0,0,0.12); border-radius:4px; margin-top:8px; position:absolute; z-index:10; width:100%; backdrop-filter: blur(10px); }
+.countryListLight{ background:rgba(255,255,255,0.95); box-shadow:0 4px 20px rgba(0,0,0,0.15); }
+.countryListDark{ background:rgba(18,18,18,0.95); box-shadow:0 4px 20px rgba(0,0,0,0.5); }
+.countryOption{ padding:8px 12px; cursor:pointer; border-bottom:1px solid rgba(0,0,0,0.12); }
+.priceButtons{ margin-top:8px; display:flex; gap:8px; }
+.iconBox18{ display:inline-block; width:18px; text-align:center; }
+
+/* Align with EditVacation styles for consistency */
+.currencyBtn{ min-width:86px; }
+.currencySymbol{ display:inline-block; width:18px; text-align:center; }
+

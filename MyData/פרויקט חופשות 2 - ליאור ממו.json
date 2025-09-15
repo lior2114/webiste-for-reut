@@ -1,0 +1,1065 @@
+{
+	"info": {
+		"_postman_id": "f45ab230-6ec6-4ff6-aa8d-aed8bea83f27",
+		"name": "פרויקט חופשות 2 - ליאור",
+		"description": "אוסף פקודות API מעודכן עבור מערכת הזמנת חופשות עם JWT authentication ומערכת bans\n\n🔐 הגדרת Authentication:\n1. לחץ על שם ה-Collection\n2. עבור לתקשון Variables\n3. הגדר ערכים עבור:\n   - admin_email: האימייל של האדמין\n   - admin_password: הסיסמה של האדמין\n   - user_email: אימייל למשתמש רגיל (אופציונלי)\n   - user_password: סיסמה למשתמש רגיל (אופציונלי)\n\n⚠️ הסיסמאות לא נשמרות בקובץ מטעמי אבטחה!\n\n📝 לאחר הגדרת הערכים, השתמש בפקודת 'התחברות' כדי לקבל JWT token.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43916877"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "admin_email",
+			"value": "",
+			"type": "string",
+			"description": "האימייל של האדמין - הגדר ערך זה בהגדרות Collection"
+		},
+		{
+			"key": "admin_password",
+			"value": "",
+			"type": "string",
+			"description": "הסיסמה של האדמין - הגדר ערך זה בהגדרות Collection (לא יישמר בקובץ)"
+		},
+		{
+			"key": "user_email",
+			"value": "",
+			"type": "string",
+			"description": "אימייל למשתמש רגיל לבדיקות"
+		},
+		{
+			"key": "user_password",
+			"value": "",
+			"type": "string",
+			"description": "סיסמה למשתמש רגיל לבדיקות"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "התחברות (Login)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const responseJson = pm.response.json();",
+									"    if (responseJson.token) {",
+									"        pm.collectionVariables.set('jwt_token', responseJson.token);",
+									"        console.log('JWT Token saved: ' + responseJson.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/login?user_email={{admin_email}}&user_password={{admin_password}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"login"
+							],
+							"query": [
+								{
+									"key": "user_email",
+									"value": "{{admin_email}}",
+									"description": "השתמש במשתנה admin_email"
+								},
+								{
+									"key": "user_password",
+									"value": "{{admin_password}}",
+									"description": "השתמש במשתנה admin_password"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "בדיקת תוקף Token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/verify_token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"verify_token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "יצירת משתמש (הרשמה)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Regular\",\n    \"last_name\": \"User\",\n    \"user_email\": \"user@example.com\",\n    \"user_password\": \"user123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "הצגת כל המשתמשים (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "הצגת משתמש לפי ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "עדכון משתמש (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Updated\",\n    \"role_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "מחיקת משתמש (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "בדיקת זמינות אימייל",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/check_email?user_email=test@example.com",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"check_email"
+							],
+							"query": [
+								{
+									"key": "user_email",
+									"value": "test@example.com"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Countries",
+			"item": [
+				{
+					"name": "יצירת מדינה (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country_name\": \"Germany\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/countries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "הצגת כל המדינות",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/countries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "הצגת מדינה לפי ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/countries/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"countries",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "עדכון מדינה (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country_name\": \"Israel\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/countries/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"countries",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "מחיקת מדינה (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/countries/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"countries",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "יצירת תפקיד (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"role_name\": \"Moderator\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/roles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "הצגת כל התפקידים (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/roles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "הצגת תפקיד לפי ID (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/roles/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "עדכון תפקיד (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"role_name\": \"Super Admin\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/roles/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "מחיקת תפקיד (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/roles/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"roles",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vacations",
+			"item": [
+				{
+					"name": "יצירת חופשה (Admin) - JSON",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country_id\": 1,\n    \"vacation_description\": \"Vacation in Eilat. Includes diving, water sports, amusement parks and desert landscapes\",\n    \"vacation_start\": \"2026-08-01\",\n    \"vacation_ends\": \"2026-08-08\",\n    \"vacation_price\": 3800.8,\n    \"vacation_file_name\": \"eilat.jpg\",\n    \"vacation_currency\": \"ILS\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/vacations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vacations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "יצירת חופשה עם תמונה (Admin) - FormData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "country_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "vacation_description",
+									"value": "Amazing vacation with uploaded image",
+									"type": "text"
+								},
+								{
+									"key": "vacation_start",
+									"value": "2026-09-01",
+									"type": "text"
+								},
+								{
+									"key": "vacation_ends",
+									"value": "2026-09-08",
+									"type": "text"
+								},
+								{
+									"key": "vacation_price",
+									"value": "4500",
+									"type": "text"
+								},
+								{
+									"key": "currency",
+									"value": "ILS",
+									"type": "text"
+								},
+								{
+									"key": "admin_user_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/path/to/your/image.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/vacations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vacations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "הצגת כל החופשות",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vacations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vacations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "הצגת חופשה לפי ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vacations/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vacations",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "עדכון חופשה (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vacation_price\": 4000,\n    \"vacation_description\": \"Updated vacation description\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/vacations/update/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vacations",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "מחיקת חופשה (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vacations/delete/1?admin_user_id=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vacations",
+								"delete",
+								"1"
+							],
+							"query": [
+								{
+									"key": "admin_user_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "גישה לתמונת חופשה",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/uploads/eilat.jpg",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"uploads",
+								"eilat.jpg"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Likes",
+			"item": [
+				{
+					"name": "הוספת לייק לחופשה",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 2,\n    \"vacation_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/likes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "הסרת לייק מחופשה",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 2,\n    \"vacation_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/likes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "הצגת כל הלייקים",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/likes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"likes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bans (חדש)",
+			"item": [
+				{
+					"name": "הרחקת משתמש (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"הפרת חוקי הקהילה\",\n    \"days\": 7\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/bans/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bans",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "בדיקת סטטוס הרחקה (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/bans/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bans",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ביטול הרחקה (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/bans/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bans",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

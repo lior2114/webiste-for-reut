@@ -1,0 +1,7 @@
+.containerBox { margin-top: 32px; }
+.paper { padding: 32px; }
+.userRow { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.userName { font-weight: bold; }
+.sectionTitle { margin-top: 16px; margin-bottom: 16px; }
+.vacationCard { padding: 16px; }
+

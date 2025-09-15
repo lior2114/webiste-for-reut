@@ -1,0 +1,339 @@
+/* רקע מטורף עם גרדיאנטים */
+.container {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #54a0ff);
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* רקע עם כסף נופל */
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.moneyRain {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.moneyNote {
+  position: absolute;
+  font-size: 4rem;
+  color: #ffd700;
+  font-weight: bold;
+  text-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+  animation: moneyFall linear infinite;
+  top: -50px;
+}
+
+@keyframes moneyFall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* תוכן מרכזי */
+.content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 4rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  backdrop-filter: blur(10px);
+  border: 6px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 16px 64px rgba(0, 0, 0, 0.3);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* כותרת מטורפת */
+.title {
+  font-size: 6rem;
+  font-weight: 900;
+  margin-bottom: 3rem;
+  text-shadow: 5px 5px 0px #ff6b6b, 10px 10px 0px #4ecdc4, 15px 15px 0px #45b7d1, 20px 20px 0px #96ceb4;
+  color: #fff;
+  font-family: 'Arial Black', sans-serif;
+  line-height: 1.1;
+}
+
+.bounce {
+  display: inline-block;
+  animation: bounce 1s ease-in-out infinite alternate;
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0px) scale(1); }
+  100% { transform: translateY(-40px) scale(1.2); }
+}
+
+/* טקסטים עם אנימציות שונות */
+.textContainer {
+  margin: 2rem 0;
+}
+
+.text1, .text2, .text3 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border-radius: 20px;
+  color: #fff;
+  text-shadow: 4px 4px 8px rgba(0,0,0,0.7);
+  line-height: 1.2;
+}
+
+.text1 {
+  background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+  animation: shake 0.5s ease-in-out infinite;
+  transform: rotate(-2deg);
+}
+
+.text2 {
+  background: linear-gradient(45deg, #4ecdc4, #6dd5ed);
+  animation: pulse 1s ease-in-out infinite;
+  transform: rotate(2deg);
+}
+
+.text3 {
+  background: linear-gradient(45deg, #feca57, #ff9ff3);
+  animation: wiggle 0.8s ease-in-out infinite;
+  transform: rotate(-1deg);
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotate(-2deg) translateX(0px); }
+  25% { transform: rotate(-2deg) translateX(10px); }
+  50% { transform: rotate(-2deg) translateX(-10px); }
+  75% { transform: rotate(-2deg) translateX(5px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: rotate(2deg) scale(1); }
+  50% { transform: rotate(2deg) scale(1.2); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-1deg); }
+  25% { transform: rotate(3deg); }
+  50% { transform: rotate(-3deg); }
+  75% { transform: rotate(1deg); }
+}
+
+/* אמוג'ים מטורפים */
+.emojiContainer {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.emoji {
+  font-size: 6rem;
+  animation: emojiFloat 2s ease-in-out infinite;
+  display: inline-block;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  margin: 0.5rem;
+}
+
+.emoji:hover {
+  transform: scale(2) rotate(360deg);
+}
+
+.emoji:nth-child(1) { animation-delay: 0s; }
+.emoji:nth-child(2) { animation-delay: 0.2s; }
+.emoji:nth-child(3) { animation-delay: 0.4s; }
+.emoji:nth-child(4) { animation-delay: 0.6s; }
+.emoji:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes emojiFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-40px) rotate(180deg); }
+}
+
+/* כפתור מטורף */
+.buttonContainer {
+  margin: 2rem 0;
+}
+
+.crazyButton {
+  position: relative;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+  background-size: 300% 300%;
+  animation: gradientMove 2s ease infinite;
+  border: none;
+  padding: 2rem 4rem;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+  border-radius: 100px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  min-width: 400px;
+}
+
+.crazyButton:hover {
+  transform: scale(1.2) rotate(5deg);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+}
+
+.crazyButton:active {
+  transform: scale(0.95) rotate(-5deg);
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.buttonText {
+  position: relative;
+  z-index: 2;
+}
+
+.buttonSparkles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  animation: sparkle 1s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+/* אלמנטים צפים */
+.floatingElements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.floatingText {
+  position: absolute;
+  font-size: 4rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.3);
+  animation: floatAround 4s ease-in-out infinite;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.floatingText:nth-child(1) {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.floatingText:nth-child(2) {
+  top: 60%;
+  right: 15%;
+  animation-delay: 1s;
+}
+
+.floatingText:nth-child(3) {
+  bottom: 30%;
+  left: 20%;
+  animation-delay: 2s;
+}
+
+@keyframes floatAround {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg) scale(1);
+    opacity: 0.3;
+  }
+  50% { 
+    transform: translateY(-60px) rotate(180deg) scale(1.5);
+    opacity: 0.8;
+  }
+}
+
+/* אפקטים נוספים */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  animation: shimmer 3s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* רספונסיביות */
+@media (max-width: 768px) {
+  .title {
+    font-size: 4rem;
+  }
+  
+  .text1, .text2, .text3 {
+    font-size: 2rem;
+  }
+  
+  .emoji {
+    font-size: 4rem;
+  }
+  
+  .crazyButton {
+    font-size: 1.5rem;
+    padding: 1.5rem 3rem;
+    min-width: 300px;
+  }
+  
+  .floatingText {
+    font-size: 2.5rem;
+  }
+  
+  .moneyNote {
+    font-size: 2.5rem;
+  }
+  
+  .content {
+    padding: 2rem;
+    max-width: 90%;
+  }
+}

@@ -1,0 +1,351 @@
+@import './App.css';
+
+/* Global theme variables (dark as default) */
+:root,
+[data-theme='dark'] {
+  --bg-start: #0f1021;
+  --bg-end: #1b1c30;
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-stroke: rgba(255, 255, 255, 0.18);
+  --text-primary: #e8eaf6;
+  --text-secondary: #b8b9c9;
+  --accent: #7c4dff;
+  --accent-2: #00e5ff;
+  --danger: #ff5577;
+  --success: #00d4a6;
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --btn-gap: 8px;
+  --cell-padding: 12px;
+}
+
+[data-theme='light'] {
+  --bg-start: #f7f9fc;
+  --bg-end: #e9eef5;
+  --glass-bg: rgba(0, 0, 0, 0.03);
+  --glass-stroke: rgba(0, 0, 0, 0.08);
+  --text-primary: #1b1e24;
+  --text-secondary: #4a4f5a;
+  --accent: #7c4dff;
+  --accent-2: #0081cb;
+  --danger: #d32f2f;
+  --success: #2e7d32;
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.18);
+  --btn-gap: 8px;
+  --cell-padding: 12px;
+}
+/* Logical, RTL-friendly actions wrapper */
+.cell-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--btn-gap);
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--text-primary);
+  background: radial-gradient(1200px 800px at 10% 10%, #1c2040 0%, transparent 60%),
+              radial-gradient(1000px 700px at 90% 20%, #00344a 0%, transparent 55%),
+              linear-gradient(160deg, var(--bg-start), var(--bg-end));
+  background-attachment: fixed;
+  letter-spacing: 0.2px;
+}
+
+[data-theme='light'] body {
+  background: linear-gradient(160deg, var(--bg-start), var(--bg-end));
+}
+
+/* Subtle animated accent orbs */
+body::before, body::after {
+  content: "";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.15;
+  z-index: -1;
+  animation: float 18s ease-in-out infinite;
+}
+body::before {
+  background: radial-gradient(circle at 30% 30%, var(--accent), transparent 60%);
+  top: -120px;
+  left: -120px;
+}
+body::after {
+  background: radial-gradient(circle at 70% 70%, var(--accent-2), transparent 60%);
+  bottom: -120px;
+  right: -120px;
+  animation-delay: 4s;
+}
+
+[data-theme='light'] body::before, [data-theme='light'] body::after {
+  opacity: 0.06;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+/* Typography polish */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  margin: 0 0 0.6rem;
+}
+p, span, label, small {
+  color: var(--text-secondary);
+}
+
+/* Layout helpers */
+.container, .MuiContainer-root {
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
+}
+
+/* Force 3 feature cards per row on desktop for Home */
+@media (min-width: 900px) {
+  .home-features > .MuiGrid-item { max-width: 33.3333% !important; flex-basis: 33.3333% !important; }
+  .about-features > .MuiGrid-item { max-width: 33.3333% !important; flex-basis: 33.3333% !important; }
+}
+
+/* Glassmorphism cards (MUI Paper) */
+.MuiPaper-root {
+  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03)) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-stroke);
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-lg) !important;
+  overflow: hidden;
+}
+[data-theme='light'] .MuiPaper-root {
+  background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01)) !important;
+}
+
+.MuiDivider-root {
+  border-color: rgba(255,255,255,0.14) !important;
+}
+[data-theme='light'] .MuiDivider-root {
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+/* Buttons: gradient, hover lift */
+.MuiDialog-paper {
+  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03)) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-stroke);
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+[data-theme='light'] .MuiDialog-paper {
+  background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01)) !important;
+}
+.MuiButton-root {
+  text-transform: none !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px;
+  border-radius: 12px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+}
+.MuiButton-containedPrimary, .MuiButton-contained {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  box-shadow: 0 8px 18px rgba(0, 229, 255, 0.25) !important;
+}
+.MuiButton-outlined {
+  border-color: rgba(255,255,255,0.35) !important;
+  color: var(--text-primary) !important;
+  background: rgba(255,255,255,0.02);
+}
+[data-theme='light'] .MuiButton-outlined {
+  border-color: rgba(0,0,0,0.25) !important;
+  background: rgba(0,0,0,0.02);
+}
+.MuiButton-text {
+  color: var(--accent-2) !important;
+}
+.btn-edit { background: rgba(0,229,255,0.12) !important; color: #8ad7ff !important; border: 1px solid rgba(0,229,255,0.35) !important; }
+.btn-edit:hover { background: rgba(0,229,255,0.2) !important; }
+.btn-delete { background: rgba(255,85,119,0.15) !important; color: #ff8aa3 !important; border: 1px solid rgba(255,85,119,0.45) !important; }
+.btn-delete:hover { background: rgba(255,85,119,0.25) !important; }
+.btn-ban { background: rgba(255,193,7,0.18) !important; color: #ffd54f !important; border: 1px solid rgba(255,193,7,0.45) !important; }
+.btn-ban:hover { background: rgba(255,193,7,0.28) !important; }
+.MuiButton-root:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 229, 255, 0.32) !important;
+}
+.MuiButton-root:active {
+  transform: translateY(0);
+}
+
+/* Lists */
+.MuiListItem-root {
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+/* Admin rows: grid with fixed actions column */
+.row-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--actions-width);
+  gap: 12px;
+  align-items: center;
+}
+.MuiListItem-root:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateX(-2px);
+}
+.MuiListItemText-primary {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+}
+.MuiListItemText-secondary {
+  color: var(--text-secondary) !important;
+}
+
+/* Table-like layout for admin lists (two text columns + actions) */
+.MuiPaper-root .MuiListItemText-root {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) minmax(200px, 1.3fr);
+  column-gap: 16px;
+  align-items: baseline;
+}
+.MuiListItemText-root { margin: 0 !important; }
+.row-item .MuiListItemText-root { min-width: 0; }
+[dir='rtl'] .row-item { text-align: right; }
+[dir='ltr'] .row-item { text-align: left; }
+[dir='rtl'] .row-item .cell-actions { justify-content: flex-start; direction: rtl; }
+[dir='ltr'] .row-item .cell-actions { justify-content: flex-start; direction: ltr; }
+.MuiPaper-root .MuiListItemText-primary { grid-column: 1; }
+.MuiPaper-root .MuiListItemText-secondary { grid-column: 2; }
+
+/* Responsive: stack to single column on narrow screens */
+@media (max-width: 900px) {
+  .MuiPaper-root .MuiListItemText-root { grid-template-columns: 1fr; row-gap: 4px; }
+  .MuiPaper-root .MuiListItemText-secondary { grid-column: 1; }
+}
+
+/* Prevent overlap between text and secondary actions */
+[dir='ltr'] .MuiListItem-root .MuiListItemText-root { padding-right: 1000px; }
+[dir='rtl'] .MuiListItem-root .MuiListItemText-root { padding-left: 0; }
+.MuiListItem-root { align-items: center; min-height: 56px; }
+.MuiListItemText-primary, .MuiListItemText-secondary { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.MuiListItemSecondaryAction-root { display: inline-flex; gap: 10px; align-items: center; min-width: 10px; justify-content: flex-start; }
+
+/* Reserve space for actions on the list item itself (avoids overlap) */
+/* Compact inline padding; grid allocates actions column */
+[dir='ltr'] .row-item { padding: 6px 12px 6px 8px !important; }
+[dir='rtl'] .row-item { padding: 6px 8px 6px 12px !important; }
+
+@media (max-width: 900px) {
+  [dir='ltr'] .MuiPaper-root .MuiListItem-root { padding-right: 10px !important; }
+  [dir='rtl'] .MuiPaper-root .MuiListItem-root { padding-left: 10px !important; }
+}
+
+/* Make long lists scroll inside cards to avoid overflow */
+.MuiPaper-root .MuiList-root { max-height: min(60vh, 520px); overflow: auto; }
+
+/* Ensure action area is placed correctly per direction */
+/* Remove legacy secondaryAction offsets (we place actions inside grid) */
+.MuiListItemSecondaryAction-root { position: static !important; transform: none !important; top: auto !important; left: auto !important; right: auto !important; }
+
+/* Responsive: stack actions below content on small screens */
+/* Keep actions beside text on all sizes */
+
+/* Alerts */
+.MuiAlert-root {
+  border-radius: 14px !important;
+  background: rgba(255,255,255,0.06) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+[data-theme='light'] .MuiAlert-root {
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.12) !important;
+}
+.MuiAlert-standardError {
+  border-color: rgba(255,85,119,0.45) !important;
+}
+
+/* Admin layout niceties */
+.MuiGrid-container { align-items: stretch; }
+.MuiGrid-item .MuiPaper-root { height: 100%; }
+
+/* Force two-column admin layout side by side */
+.admin-grid { display: flex; flex-wrap: nowrap; gap: 32px; }
+.admin-grid > * { flex: 1 1 0; min-width: 0; }
+
+/* Direction-aware order: in RTL users on the right, vacations on the left; reverse in LTR */
+[dir='rtl'] .admin-grid .admin-users { order: 2; }
+[dir='rtl'] .admin-grid .admin-vacations { order: 1; }
+[dir='ltr'] .admin-grid .admin-users { order: 1; }
+[dir='ltr'] .admin-grid .admin-vacations { order: 2; }
+
+/* Inputs */
+.MuiInputBase-root, .MuiOutlinedInput-root {
+  color: var(--text-primary) !important;
+}
+.MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255,255,255,0.25) !important;
+}
+.MuiInputLabel-root { color: var(--text-secondary) !important; }
+[data-theme='light'] .MuiInputLabel-root { color: #4a4f5a !important; }
+/* Align labels by document direction; do not force left/right positions to keep notch aligned */
+[dir='ltr'] .MuiFormControl-root .MuiInputLabel-root { text-align: left; }
+[dir='rtl'] .MuiFormControl-root .MuiInputLabel-root { text-align: right; }
+.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--accent-2) !important;
+}
+
+/* Subtle scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.25) transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* Subtle fade-in for pages */
+#root > * {
+  animation: pageFade 300ms ease 1;
+}
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Utility accents for emphasis */
+.accent-text { color: var(--accent-2); }
+.danger-text { color: var(--danger); }
+.success-text { color: var(--success); }
+
+/* Fancy headings gradient for premium feel */
+.MuiTypography-h6, h1, h2 {
+  background: linear-gradient(135deg, #c0c6ff 0%, #8ad7ff 50%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Subtle card entrance */
+.MuiPaper-root { animation: cardIn 360ms ease 1; }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+
